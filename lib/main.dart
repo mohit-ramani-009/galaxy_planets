@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:galaxy_planets/screens/fav_screen.dart';
 import 'package:galaxy_planets/screens/home_screen.dart';
 import 'package:galaxy_planets/screens/splash_screen.dart';
 
@@ -12,6 +13,7 @@ void main(){
     routes: {
       '/': (context) => HomeScreen(),
       'detail_screen': (context) => DetailScreen(),
+      'fav_screen': (context) => FavoritesScreen(),
       'SplashScreen': (context) => SplashScreen(),
     },
   ));

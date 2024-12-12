@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 
 class DetailScreen extends StatefulWidget {
   const DetailScreen({super.key});
@@ -11,6 +13,7 @@ class _DetailScreenState extends State<DetailScreen>
     with TickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _rotation;
+  bool isFavorite = false;
 
   @override
   void initState() {
@@ -33,16 +36,36 @@ class _DetailScreenState extends State<DetailScreen>
     super.dispose();
   }
 
+  Future<void> toggleFavorite(Map<String, dynamic> planet) async {
+    final prefs = await SharedPreferences.getInstance();
+    final favorites = prefs.getStringList('favorites') ?? [];
+    final planetJson = json.encode(planet);
+
+    if (isFavorite) {
+      favorites.remove(planetJson);
+    } else {
+      favorites.add(planetJson);
+    }
+
+    await prefs.setStringList('favorites', favorites);
+    setState(() {
+      isFavorite = !isFavorite;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final arguments =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
 
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
         foregroundColor: Colors.white,
         centerTitle: true,
+        actions: [IconButton(onPressed: (){
+          Navigator.of(context).pushNamed("fav_screen");
+        }, icon: Icon(Icons.favorite_outlined))],
         backgroundColor: Colors.transparent,
         flexibleSpace: Container(
           decoration: BoxDecoration(
@@ -89,7 +112,7 @@ class _DetailScreenState extends State<DetailScreen>
           SingleChildScrollView(
             child: Padding(
               padding:
-                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
+              const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -158,6 +181,17 @@ class _DetailScreenState extends State<DetailScreen>
                     ),
                   ),
                   const SizedBox(height: 20),
+                  Center(
+                    child: ElevatedButton.icon(
+                      icon: Icon(isFavorite ? Icons.favorite : Icons.favorite_border),
+                      label: Text(isFavorite ? 'Remove from Favorites' : 'Add to Favorites'),
+                      onPressed: () => toggleFavorite(arguments),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
+                        foregroundColor: Colors.white,
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),

@@ -32,6 +32,9 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         foregroundColor: Colors.white,
         centerTitle: true,
+        actions: [IconButton(onPressed: (){
+          Navigator.of(context).pushNamed("fav_screen");
+        }, icon: Icon(Icons.favorite_outlined))],
         backgroundColor: Colors.transparent,
         flexibleSpace: Container(
           decoration: BoxDecoration(
@@ -82,7 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: const [
                   CircleAvatar(
                     radius: 40,
-                    backgroundImage: AssetImage('assets/images/'),
+                    backgroundImage: NetworkImage("https://img.freepik.com/premium-photo/cartoon-character-with-laptop-blue-background-with-man-it_1020495-422642.jpg")
                   ),
                   SizedBox(height: 10),
                   Text(
